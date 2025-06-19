@@ -125,23 +125,43 @@ function Camera({setClawPos, boxRef, clawPos, isLowering, setIsLowering, hasPriz
             .then(() => {
 
               setIsLowering(false);
-              if(isWin){
-                console.log("中獎");
-                Swal.fire({
-                  title: '中獎了',
-                  text: '恭喜你中獎了',
-                  icon: 'success',
-                  confirmButtonText: '確定'
-                });
-              }else{
-                console.log("沒中獎");
-                Swal.fire({
-                  title: '沒中獎',
-                  text: '再接再厲',
-                  icon: 'error',
-                  confirmButtonText: '確定'
-                });
-              }
+              setIsLowering(false);
+
+// prizeType: 0 = 沒中, 1/2/3 = 各種獎品
+if (prizeType === 1) {
+  console.log("中獎：獎品 A");
+  Swal.fire({
+    title: '恭喜中獎！',
+    text: '你獲得了【神祕小熊】🎁',
+    icon: 'success',
+    confirmButtonText: '太棒了！'
+  });
+} else if (prizeType === 2) {
+  console.log("中獎：獎品 B");
+  Swal.fire({
+    title: '恭喜中獎！',
+    text: '你獲得了【發財小熊】🎉',
+    icon: 'success',
+    confirmButtonText: '太棒了！'
+  });
+} else if (prizeType === 3) {
+  console.log("中獎：獎品 C");
+  Swal.fire({
+    title: '恭喜中獎！',
+    text: '你獲得了【幸運小熊】🏆',
+    icon: 'success',
+    confirmButtonText: '太棒了！'
+  });
+} else {
+  console.log("沒中獎");
+  Swal.fire({
+    title: '沒中獎',
+    text: '再接再厲',
+    icon: 'error',
+    confirmButtonText: '確定'
+  });
+}
+
             });
 
         }
