@@ -115,7 +115,8 @@ function Camera({setClawPos, boxRef, clawPos, isLowering, setIsLowering, hasPriz
           // 隨機變數判斷是否中獎
           const random = Math.random();
           const isWin = random < 0.5;
-          
+          const prizeType = Math.floor(Math.random() * 4); // 0～3：0為沒中
+          setHasPrize(prizeType > 0); // 中獎才顯示 bear
           // Has Prize 在這裡不會被更新，給同學練習
           setHasPrize(isWin);
           
