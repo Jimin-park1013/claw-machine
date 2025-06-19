@@ -1,14 +1,9 @@
-// google 登入範例程式碼
-// 別忘記到 auth 頁面新增服務提供商
-
-"use client"
-import { initializeApp } from "firebase/app";
+"use client";
+import { initializeApp, getApps } from "firebase/app";
 import { GoogleAuthProvider, signInWithPopup, getAuth } from "firebase/auth";
-import { useState, useEffect } from "react";
-
+import { useState } from "react";
 
 export default function FBAuth() {
-
   const firebaseConfig = {
     apiKey: "AIzaSyDBJ8mxYxEh63jdaMzpDv1RL30GkKUu5nM",
     authDomain: "nccu-113-2-yzc.firebaseapp.com",
@@ -20,42 +15,39 @@ export default function FBAuth() {
     databaseURL: "https://nccu-113-2-yzc-default-rtdb.firebaseio.com/"
   };
 
-  //判斷 app 是否已經初始化過，有初始化過就使用該 app
-  const app = initializeApp(firebaseConfig, "fb-auth");
-  
+  // ✅ 判斷是否已初始化過 Firebase App，避免重複初始化
+  const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
   const provider = new GoogleAuthProvider();
-  // provider.addScope('https://www.googleapis.com/auth/contacts.readonly');
+  const auth = getAuth(app); // ✅ 明確使用同一個 app
+  auth.useDeviceLanguage();
 
   const [user, setUser] = useState(null);
 
-  const auth = getAuth();
-  auth.useDeviceLanguage();
-
-
   const signIn = () => {
-    signInWithPopup(auth, provider).then((result) => {
-      console.log(result);
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      // The signed-in user info.
-      const user = result.user;
-      console.log(user, token, credential);
-      setUser(user);
-    }).catch((error) => {
-      console.log(error);
-    });
-  }
-  
-  
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        const user = result.user;
+        console.log(user, token, credential);
+        setUser(user);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   return (
-    <div className="w-full h-screen">
-      <h1>FB Auth</h1>
-      <h3>User: {user?.displayName}</h3>
-      <button onClick={() => {
-        signIn();
-      }}>Sign In</button>
+    <div className="w-full h-screen flex flex-col items-center justify-center">
+      <h1 className="text-xl font-bold">FB Auth</h1>
+      <h3>User: {user?.displayName || "尚未登入"}</h3>
+      <button
+        onClick={signIn}
+        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+      >
+        Sign In with Google
+      </button>
     </div>
   );
 }
